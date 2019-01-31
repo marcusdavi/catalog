@@ -3,10 +3,9 @@ from flask import Flask, jsonify, request, url_for, abort, g
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine
-#from flask.ext.httpauth import HTTPBasicAuth
+# from flask.ext.httpauth import HTTPBasicAuth
 
-#auth = HTTPBasicAuth() 
-
+# auth = HTTPBasicAuth()
 
 engine = create_engine('sqlite:///catalog.db')
 
@@ -15,20 +14,19 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 app = Flask(__name__)
 
-#ADD @auth.verify_password here
+# ADD @auth.verify_password here
 
-#ADD a /users route here
+# ADD a /users route here
 
 
-
-@app.route('/categories', methods = ['GET','POST'])
-#protect this route with a required login
+@app.route('/categories', methods=['GET', 'POST'])
+# protect this route with a required login
 def showAllCategories():
     if request.method == 'GET':
         categories = session.query(Category).all()
-        return jsonify(categories = [category.serialize for category in categories])
-
-
+        return jsonify(categories=[
+                                  category.serialize
+                                  for category in categories])
 
 if __name__ == '__main__':
     app.debug = True
