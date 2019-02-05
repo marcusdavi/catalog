@@ -1,8 +1,17 @@
 from models import Category, User, Item, Base
-from flask import Flask, jsonify, request, url_for, abort, g
+from flask import Flask, render_template, jsonify, request, url_for, abort, g, redirect, flash
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, asc
+from flask import make_response
+import requests
+import httplib2
+from flask import session as login_session
+import random
+import string
+from oauth2client.client import flow_from_clientsecrets
+from oauth2client.client import FlowExchangeError
+import json
 # from flask.ext.httpauth import HTTPBasicAuth
 
 # auth = HTTPBasicAuth()
@@ -29,10 +38,10 @@ def showAllCategoriesJSON():
 @app.route('/category', methods = ['GET','POST'])
 #protect this route with a required login
 def showAllCategories():
-	return "This Page will show all my categories"
-		
+	categories = session.query(Category).order_by(asc(Category.name))
+	return render_template('categories.html', categories=categories)		
+
 @app.route('/category/<string:category_name>', methods = ['GET','POST'])
-#protect this route with a required login
 def showCategoryItems(category_name):
 	return "This Page is the items for category %s" % category_name
 		
