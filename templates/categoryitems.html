@@ -12,14 +12,14 @@
 	<div class="row banner main">
 		<div class="col-md-1"></div>
 		<div class="col-md-12 padding-none">
-			<h1>Categories</h1>
+			<h1>Items in Category: {{category_name}}</h1>
 		</div>
 	</div>
-		{% for category in categories %}
-			<a href = "{{url_for('showCategoryItems', category_name = category.name)}}">
+		{% for item in items %}
+			<a href = "{{url_for('showCategoryItems', category_name = category_name)}}">
 				<div class="row">
 						<div class="col-md-10 category-list">
-							{{category.name}}
+							{{item.name}}
 						</div>
 					<div class="col-md-1"></div>
 				</div>
