@@ -19,7 +19,9 @@
 			<a href = "{{url_for('showCategoryItems', category_name = category_name)}}">
 				<div class="row">
 						<div class="col-md-10 category-list">
-							{{item.name}}
+							<p><h4>{{item.name}}</h4></p>
+							<a href='{{url_for('EditCategoryItem', category_name = category_name, item_name=item.name ) }}'>Edit</a> | 
+							<a href='{{url_for('DeleteCategoryItem', category_name = category_name, item_name=item.name ) }}'>Delete</a>
 						</div>
 					<div class="col-md-1"></div>
 				</div>
