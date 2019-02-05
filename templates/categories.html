@@ -1,13 +1,28 @@
-<html>
-    <head>
-        <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='style.css') }}"/>
-    </head>
-    
-    <body> 
-        <div class="pane">
-            <div class = "header">
-                <h1>Categories</h1>
-            </div>
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+	<div class="row top-menu">
+		<div class="col-md-10"></div>
+		<div class="col-md-2 text-right">
+					</div>
+	</div>
+	<div class="row divider blue">
+		<div class="col-md-12"></div>
+	</div>
+	<div class="row banner main">
+		<div class="col-md-1"></div>
+		<div class="col-md-12 padding-none">
+			<h1>Categories</h1>
 		</div>
-    </body>
-</html>
+	</div>
+		{% for category in categories %}
+			<a href = "{{url_for('showCategoryItems', category_name = category.name)}}">
+				<div class="row">
+						<div class="col-md-10 category-list">
+							<h4>{{category.name}}</h4>
+						</div>
+					<div class="col-md-1"></div>
+				</div>
+			</a>
+	{% endfor %}
+{% endblock %}
