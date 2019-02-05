@@ -12,9 +12,11 @@ import string
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import json
-# from flask.ext.httpauth import HTTPBasicAuth
 
-# auth = HTTPBasicAuth()
+#from flask.ext.httpauth import HTTPBasicAuth
+
+#auth = HTTPBasicAuth() 
+
 
 engine = create_engine('sqlite:///catalog.db')
 
@@ -23,9 +25,10 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 app = Flask(__name__)
 
-# ADD @auth.verify_password here
+#ADD @auth.verify_password here
 
-# ADD a /users route here
+#ADD a /users route here
+
 
 
 @app.route('/categoryJSON', methods = ['GET','POST'])
@@ -35,6 +38,7 @@ def showAllCategoriesJSON():
         categories = session.query(Category).all()
         return jsonify(categories = [category.serialize for category in categories])
 
+@app.route('/', methods = ['GET','POST'])
 @app.route('/category', methods = ['GET','POST'])
 #protect this route with a required login
 def showAllCategories():
@@ -43,7 +47,9 @@ def showAllCategories():
 
 @app.route('/category/<string:category_name>', methods = ['GET','POST'])
 def showCategoryItems(category_name):
-	return "This Page is the items for category %s" % category_name
+	category = session.query(Category).filter_by(name=category_name).one()
+	items = session.query(Item).filter_by(cat_id=category.id).all()
+	return render_template('categoryitems.html', category_name=category_name, items=items)		
 		
 @app.route('/category/<string:category_name>/newitem', methods = ['GET','POST'])
 #protect this route with a required login
