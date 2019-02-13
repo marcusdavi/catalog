@@ -24,5 +24,17 @@
 					<div class="col-md-1"></div>
 				</div>
 			</a>
+			{% endfor %}
+		<div class="col-md-12 padding-none">
+			<h2>Lastest Items</h2>
+		</div>
+		{% for item in items %}
+				<div class="row">
+						<div class="col-md-10 category-list">
+							<h5>{{item.name}}</h5>
+						</div>
+					<div class="col-md-1"></div>
+				</div>
+			</a>
 	{% endfor %}
 {% endblock %}

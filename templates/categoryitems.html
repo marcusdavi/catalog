@@ -12,16 +12,19 @@
 	<div class="row banner main">
 		<div class="col-md-1"></div>
 		<div class="col-md-12 padding-none">
-			<h1>Items in Category: {{category_name}}</h1>
+			<h1>Category: {{category_name}}</h1>
 		</div>
+	</div>
+	<div>
+		<a href='{{url_for('NewCategoryItem', category_name = category_name) }}'>Click Here for Add Item</a> 
 	</div>
 		{% for item in items %}
 			<a href = "{{url_for('showCategoryItems', category_name = category_name)}}">
 				<div class="row">
 						<div class="col-md-10 category-list">
-							<p><h4>{{item.name}}</h4></p>
-							<a href='{{url_for('EditCategoryItem', category_name = category_name, item_name=item.name ) }}'>Edit</a> | 
-							<a href='{{url_for('DeleteCategoryItem', category_name = category_name, item_name=item.name ) }}'>Delete</a>
+							<a href="{{url_for('ShowItem', category_name = category_name, item_name = item.name)}}"><p><h3>{{item.name}}</h3></p></a>
+							<a href="{{url_for('EditCategoryItem', category_name = category_name, item_name=item.name ) }}">Edit</a> | 
+							<a href="{{url_for('DeleteCategoryItem', category_name = category_name, item_name=item.name ) }}">Delete</a>
 						</div>
 					<div class="col-md-1"></div>
 				</div>
