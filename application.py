@@ -58,15 +58,16 @@ def fbconnect():
     # Use token to get user info from API
     userinfo_url = "https://graph.facebook.com/v2.8/me"
     '''
-        Due to the formatting for the result from the server token exchange we have to
-        split the token first on commas and select the first index which gives us the key : value
-        for the server access token then we split it on colons to pull out the actual token value
-        and replace the remaining quotes with nothing so that it can be used directly in the graph
-        api calls
+        Due to the formatting for the result from the server token
+        exchange we have to split the token first on commas and select
+        the first index which gives us the key : value for the server
+        access token then we split it on colons to pull out the actual
+        token value and replace the remaining quotes with nothing so
+        that it can be used directly in the graph api calls
     '''
     token = result.split(',')[0].split(':')[1].replace('"', '')
 
-    url = 'https://graph.facebook.com/v2.8/me?access_token=%s&fields=name,id,email' % token
+    url = 'https://graph.facebook.com/v2.8/me?access_token=%s&fields=name,id,email' % token  # noqa
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     # print "url sent for API access:%s"% url
@@ -81,7 +82,7 @@ def fbconnect():
     login_session['access_token'] = token
 
     # Get user picture
-    url = 'https://graph.facebook.com/v2.8/me/picture?access_token=%s&redirect=0&height=200&width=200' % token
+    url = 'https://graph.facebook.com/v2.8/me/picture?access_token=%s&redirect=0&height=200&width=200' % token  # noqa
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     data = json.loads(result)
@@ -101,7 +102,7 @@ def fbconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '  # noqa
 
     flash("Now logged in as %s" % login_session['username'])
     return output
@@ -112,7 +113,7 @@ def fbdisconnect():
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
     access_token = login_session['access_token']
-    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (facebook_id,access_token)
+    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (facebook_id, access_token)  # noqa
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
     return "you have been logged out"
@@ -170,7 +171,7 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
+        response = make_response(json.dumps('Current user is already connected.'),  # noqa
                                  200)
         response.headers['Content-Type'] = 'application/json'
         return response
@@ -204,7 +205,7 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '  # noqa
     flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
@@ -253,9 +254,10 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
     else:
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response = make_response(json.dumps('Failed to revoke token for given user.', 400))  # noqa
         response.headers['Content-Type'] = 'application/json'
         return response
+
 
 @app.route('/categoryJSON', methods=['GET', 'POST'])
 # protect this route with a required login
@@ -280,9 +282,9 @@ def showCategoryItems(category_name):
     if 'username' not in login_session:
         return redirect('/login')
     category = session.query(Category).filter_by(name=category_name).one()
-	items = session.query(Item).filter_by(cat_id=category.id).all()
-	return render_template('categoryitems.html',
-                               category_name=category_name, items=items)
+    items = session.query(Item).filter_by(cat_id=category.id).all()
+    return render_template('categoryitems.html',
+                           category_name=category_name, items=items)
 
 
 @app.route('/category/<string:category_name>/<string:item_name>/showItem',
@@ -291,9 +293,9 @@ def showCategoryItems(category_name):
 def ShowItem(category_name, item_name):
     if 'username' not in login_session:
         return redirect('/login')
-	category = session.query(Category).filter_by(name=category_name).one()
-	itemToShow = session.query(Item).filter_by(cat_id=category.id).filter_by(name=item_name).one()  # noqa
-	return render_template('showitem.html',
+    category = session.query(Category).filter_by(name=category_name).one()
+    itemToShow = session.query(Item).filter_by(cat_id=category.id).filter_by(name=item_name).one()  # noqa
+    return render_template('showitem.html',
                            category_name=category_name, item=itemToShow)
 
 
@@ -326,7 +328,7 @@ def EditCategoryItem(category_name, item_name):
     category = session.query(Category).filter_by(name=category_name).one()
     editedMenuItem = session.query(Item).filter_by(cat_id=category.id).filter_by(name=item_name).one()  # noqa
     if login_session['user_id'] != editedMenuItem.user_id:
-        return "<script>function myFunction() {alert('You are not authorized to edit this item.');}</script><body onload='myFunction()'>"
+        return "<script>function myFunction() {alert('You are not authorized to edit this item.');}</script><body onload='myFunction()'>"  # noqa
     if request.method == 'POST':
         if request.form['name']:
             editedMenuItem.name = request.form['name']
@@ -352,7 +354,7 @@ def DeleteCategoryItem(category_name, item_name):
     category = session.query(Category).filter_by(name=category_name).one()
     itemToDelete = session.query(Item).filter_by(cat_id=category.id).filter_by(name=item_name).one()  # noqa
     if login_session['user_id'] != itemToDelete.user_id:
-        return "<script>function myFunction() {alert('You are not authorized to delete this item.');}</script><body onload='myFunction()'>"
+        return "<script>function myFunction() {alert('You are not authorized to delete this item.');}</script><body onload='myFunction()'>"  # noqa
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
@@ -364,6 +366,7 @@ def DeleteCategoryItem(category_name, item_name):
                                category_name=category_name,
                                item_name=item_name,
                                item=itemToDelete)
+
 
 # Disconnect based on provider
 @app.route('/disconnect')
@@ -388,6 +391,6 @@ def disconnect():
         return redirect(url_for('showAllCategories'))
 
 if __name__ == '__main__':
-	app.secret_key = 'super_secret_key'
-	app.debug = True
-	app.run(host='0.0.0.0', port=5000)
+    app.secret_key = 'super_secret_key'
+    app.debug = True
+    app.run(host='0.0.0.0', port=5000)
