@@ -7,7 +7,8 @@ from sqlalchemy import create_engine, asc, desc
 from flask import make_response
 import requests
 from flask import session as login_session
-import random, string
+import random
+import string
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
@@ -25,6 +26,7 @@ engine = create_engine('sqlite:///catalog.db',
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
 
 @app.route('/login')
 def showLogin():
@@ -44,16 +46,14 @@ def fbconnect():
     access_token = request.data
     print "access token received %s " % access_token
 
-
     app_id = json.loads(open('fb_client_secrets.json', 'r').read())[
         'web']['app_id']
     app_secret = json.loads(
         open('fb_client_secrets.json', 'r').read())['web']['app_secret']
-    url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (
+    url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (  # noqa
         app_id, app_secret, access_token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
-
 
     # Use token to get user info from API
     userinfo_url = "https://graph.facebook.com/v2.8/me"
@@ -279,13 +279,9 @@ def showAllCategories():
 def showCategoryItems(category_name):
     if 'username' not in login_session:
         return redirect('/login')
-	category = session.query(Category).filter_by(name=category_name).one()
+    category = session.query(Category).filter_by(name=category_name).one()
 	items = session.query(Item).filter_by(cat_id=category.id).all()
-	creator = getUserInfo(restaurant.user_id)
-    if 'username' not in login_session or creator.id != login_session['user_id']:
-        return render_template('publiccategoryitems.html', items=items, restaurant=restaurant, creator=creator)
-    else:
-    	return render_template('categoryitems.html',
+	return render_template('categoryitems.html',
                                category_name=category_name, items=items)
 
 
