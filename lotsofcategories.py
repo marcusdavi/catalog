@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from models import Category, Base, Item
+from models import Category, Base, Item, User
 
 engine = create_engine('sqlite:///catalog.db')
 # Bind the engine to the metadata of the Base class so that the
@@ -67,7 +67,9 @@ session.add(category9)
 session.commit()
 
 # ADD User
-user1 = User(id=1, username="teste", email="teste@gmail.com")
+user1 = User(name="Robo Barista", email="tinnyTim@udacity.com",
+             picture='https://pbs.twimg.com/profile_images/2671170543/18debd694829ed78203a5a36dd364160_400x400.png')
+
 session.add(user1)
 session.commit
 

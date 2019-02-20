@@ -14,27 +14,35 @@
 		<div class="col-md-12 padding-none">
 			<h1>Categories</h1>
 		</div>
+		<div class = 'flash'>
+		      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+          
+        <ul>
+        {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+
+</div>		
 	</div>
-		{% for category in categories %}
-			<a href = "{{url_for('showCategoryItems', category_name = category.name)}}">
-				<div class="row">
-						<div class="col-md-10 category-list">
-							<h4>{{category.name}}</h4>
-						</div>
-					<div class="col-md-1"></div>
-				</div>
-			</a>
+		<div class="row">
+			<div class="col-6">
+				{% for category in categories %}
+					<a href = "{{url_for('showCategoryItems', category_name = category.name)}}">
+						<h4>{{category.name}}</h4>
+					</a>
+				{% endfor %}
+			</div>
+			
+			<div class="col-6">
+				<h2>Lastest Items</h2>
+				{% for item in items %}
+					<h5>{{item.name}}</h5>
+				</a>
 			{% endfor %}
-		<div class="col-md-12 padding-none">
-			<h2>Lastest Items</h2>
+			</div>
 		</div>
-		{% for item in items %}
-				<div class="row">
-						<div class="col-md-10 category-list">
-							<h5>{{item.name}}</h5>
-						</div>
-					<div class="col-md-1"></div>
-				</div>
-			</a>
-	{% endfor %}
 {% endblock %}
