@@ -1,9 +1,14 @@
 # Marcus Ribeiro - Catalog
 
 ## Requirements Softwares
+
 1. Python 2
-2. Flask Framework
-3. SQL Alchemy
+2. SQLAlchemy 1.2.18
+3. Flask 1.0.2
+4. Flask-HTTPAuth 3.2.4
+5. httplib2 0.12.1
+6. oauth2client 4.1.3
+7. Werkzeug 0.14.1
 
 ## To run this final project
 
