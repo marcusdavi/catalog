@@ -259,17 +259,38 @@ def gdisconnect():
         return response
 
 
+# JSON for Show All Categories.
 @app.route('/categoryJSON', methods=['GET', 'POST'])
-# protect this route with a required login
 def showAllCategoriesJSON():
     if request.method == 'GET':
         categories = session.query(Category).all()
-        return jsonify(categories=[category.serialize for category in categories])  # noqa
+        return jsonify(categories=[category.serialize
+                       for category in categories])
 
 
+# JSON for Show All Items of a Category.
+@app.route('/category/<string:category_name>/JSON',
+           methods=['GET', 'POST'])
+def showCategoryItemsJSON(category_name):
+    if request.method == 'GET':
+        category = session.query(Category).filter_by(name=category_name).one()
+        items = session.query(Item).filter_by(cat_id=category.id).all()  # noqa
+        return jsonify(items=[item.serialize for item in items])  # noqa
+
+
+# JSON for Show a Item.
+@app.route('/category/<string:category_name>/<string:item_name>/JSON',
+           methods=['GET', 'POST'])
+def showItemJSON(category_name, item_name):
+    if request.method == 'GET':
+        category = session.query(Category).filter_by(name=category_name).one()
+        item = session.query(Item).filter_by(cat_id=category.id).filter_by(name=item_name).one()  # noqa
+        return jsonify(item.serialize)  # noqa
+
+
+# Function for Show All Categories.
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/category', methods=['GET', 'POST'])
-# protect this route with a required login
 def showAllCategories():
     categories = session.query(Category).order_by(asc(Category.name))
     lastestItems = session.query(Item).order_by(desc(Item.id)).limit(10)
@@ -277,6 +298,7 @@ def showAllCategories():
                             categories=categories, items=lastestItems)  # noqa
 
 
+# Function for Show a Category Items.
 @app.route('/category/<string:category_name>', methods=['GET', 'POST'])
 def showCategoryItems(category_name):
     if 'username' not in login_session:
@@ -287,9 +309,9 @@ def showCategoryItems(category_name):
                            category_name=category_name, items=items)
 
 
+# Function for Show a Item Selected.
 @app.route('/category/<string:category_name>/<string:item_name>/showItem',
            methods=['GET', 'POST'])
-# protect this route with a required login
 def ShowItem(category_name, item_name):
     if 'username' not in login_session:
         return redirect('/login')
@@ -299,8 +321,8 @@ def ShowItem(category_name, item_name):
                            category_name=category_name, item=itemToShow)
 
 
+# Function for Create a Item.
 @app.route('/category/<string:category_name>/newitem', methods=['GET', 'POST'])
-# protect this route with a required login
 def NewCategoryItem(category_name):
     if 'username' not in login_session:
         return redirect('/login')
@@ -308,7 +330,7 @@ def NewCategoryItem(category_name):
     if request.method == 'POST':
         newItem = Item(name=request.form['name'],
                        description=request.form['description'],
-                       cat_id=category.id, user_id='1')
+                       cat_id=category.id, user_id=login_session['user_id'])
         session.add(newItem)
         session.commit()
         flash('New Menu %s Item Successfully Created' % (newItem.name))
@@ -319,9 +341,9 @@ def NewCategoryItem(category_name):
                                category_name=category_name)
 
 
+# Function for Edit a Item. Only the creator can Edit.
 @app.route('/category/<string:category_name>/<string:item_name>/edit',
            methods=['GET', 'POST'])
-# protect this route with a required login
 def EditCategoryItem(category_name, item_name):
     if 'username' not in login_session:
         return redirect('/login')
@@ -345,9 +367,9 @@ def EditCategoryItem(category_name, item_name):
                                item_name=item_name, item=editedMenuItem)
 
 
+# Function for Delete a Item. Only the creator can Delete.
 @app.route('/category/<string:category_name>/<string:item_name>/delete',
            methods=['GET', 'POST'])
-# protect this route with a required login
 def DeleteCategoryItem(category_name, item_name):
     if 'username' not in login_session:
         return redirect('/login')
