@@ -1,7 +1,7 @@
 # Marcus Ribeiro - Catalog
 
 ## Requirements Softwares
-1. Python 3
+1. Python 2
 2. Flask Framework
 3. SQL Alchemy
 
