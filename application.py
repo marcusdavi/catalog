@@ -18,7 +18,7 @@ app = Flask(__name__)
 
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
-APPLICATION_NAME = "Catalog"
+APPLICATION_NAME = "YOUR_APPLICATION_NAME_HERE"
 
 engine = create_engine('sqlite:///catalog.db',
                        connect_args={'check_same_thread': False})
