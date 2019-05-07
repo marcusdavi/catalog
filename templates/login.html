@@ -1,10 +1,12 @@
+<html>
 <head>
 
   <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
-   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
-  </script>
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 
-<script src="//apis.google.com/js/platform.js?onload=start"> </script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<meta name="google-signin-client_id" content="348405621376-uk7inebshvb1vr0n668t96bdt7863ch2.apps.googleusercontent.com">
+
 
 <!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
 
@@ -17,23 +19,29 @@
 
 <!-- GOOGLE PLUS SIGN IN-->
 
-
-          <div id="signinButton">
-          <span class="g-signin"
-            data-scope="openid email"
-            data-clientid="YOUR_CLIENT_ID_HERE"
-            data-redirecturi="postmessage"
-            data-accesstype="offline"
-            data-cookiepolicy="single_host_origin"
-            data-callback="signInCallback"
-            data-approvalprompt="force">
-          </span>
-        </div>
+<div class="g-signin2" data-onsuccess="onSignIn"></div>
 
 <div id="result"></div>
+    
+<a href="#" onclick="signOut();">Sign out</a>
+<script>
+  function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+  }
+</script>
 
 <script>
-function signInCallback(authResult) {
+    
+function onSignIn(googleUser) {
+  var profile = googleUser.getBasicProfile();
+  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+  console.log('Name: ' + profile.getName());
+  console.log('Image URL: ' + profile.getImageUrl());
+  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
   if (authResult['code']) {
 
     // Hide the sign-in button now that the user is authorized
@@ -67,80 +75,7 @@ function signInCallback(authResult) {
   }); } }
 </script>
 
-
-
 <!--END GOOGLE PLUS SIGN IN -->
-
-<!--FACEBOOK SIGN IN -->
-<script>
-  window.fbAsyncInit = function() {
-  FB.init({
-    appId      : 'YOUR_ID_APP_HERE',
-    cookie     : true,  // enable cookies to allow the server to access
-                        // the session
-    xfbml      : true,  // parse social plugins on this page
-    version    : 'v2.8' // use version 2.8
-  });
-
-  };
-
-  // Load the SDK asynchronously
-  (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
-
-  // Here we run a very simple test of the Graph API after login is
-  // successful.  See statusChangeCallback() for when this call is made.
-  function sendTokenToServer() {
-    var access_token = FB.getAuthResponse()['accessToken'];
-    console.log(access_token)
-    console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me', function(response) {
-      console.log('Successful login for: ' + response.name);
-     $.ajax({
-      type: 'POST',
-      url: '/fbconnect?state={{STATE}}',
-      processData: false,
-      data: access_token,
-      contentType: 'application/octet-stream; charset=utf-8',
-      success: function(result) {
-        // Handle or verify the server response if necessary.
-        if (result) {
-          $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
-         setTimeout(function() {
-          window.location.href = "/category";
-         }, 4000);
-
-
-      } else {
-        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
-         }
-
-      }
-
-  });
-
-
-    });
-  }
-</script>
-
-
-<button>
-
-
-          <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
-<a href='javascript:sendTokenToServer()'>Login with Facebook</a>
-
-</fb:login-button>
-
-
-        </button>
-<!--END FACEBOOK SIGN IN -->
 
   </body>
 
